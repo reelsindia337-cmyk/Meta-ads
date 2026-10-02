@@ -10,6 +10,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - run: unzip -q Meta-Ads-App-Package.zip -d pkg
+      - run: if [ -f icon.png ]; then cp icon.png pkg/app/src/main/res/drawable/ic_launcher.png; fi
       - uses: actions/setup-java@v4
         with:
           distribution: temurin
