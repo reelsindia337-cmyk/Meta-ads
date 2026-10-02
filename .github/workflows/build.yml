@@ -1,1 +1,26 @@
-
+name: Build APK
+on:
+  push:
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  apk:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: unzip -q Meta-Ads-App-Package.zip -d pkg
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+      - uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: '8.9'
+      - run: cd pkg && gradle assembleDebug --no-daemon
+      - run: cp pkg/app/build/outputs/apk/debug/app-debug.apk MetaAds.apk
+      - uses: softprops/action-gh-release@v2
+        with:
+          tag_name: latest
+          name: Meta Ads APK
+          files: MetaAds.apk
